@@ -21,11 +21,12 @@ def basicApplicationId = "org.fdroid.basic"
 def privilegedExtensionApplicationId = '"org.fdroid.fdroid.privileged"'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 33
+    buildToolsVersion '33.0.1'
 
     defaultConfig {
-        versionCode 1012051
-        versionName getVersionName()
+        versionCode Integer.parseInt(("1121" + "010000"), 10)  //Integer.MAX_VALUE == 2147483647
+        versionName 'fork/1.12.1/v1.0.0'
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         minSdkVersion 14
