@@ -195,33 +195,52 @@ public class HttpDownloader extends Downloader {
     }
 
     HttpURLConnection getConnection() throws SocketTimeoutException, IOException {
-        HttpURLConnection connection;
-        if (isSwapUrl(sourceUrl)) {
-            // swap never works with a proxy, its unrouted IP on the same subnet
-            connection = (HttpURLConnection) sourceUrl.openConnection();
-            connection.setRequestProperty("Connection", "Close"); // avoid keep-alive
-        } else {
-            if (queryString != null) {
+        HttpURLConnection connection = null;
+        URL url = sourceUrl;
+        int redirectCounter = 0;
+        do {
+            if (connection != null) {
+                // throws MalformedURLException, a type of IOException
+                url = new URL(connection.getHeaderField("Location"));
+            }
+
+            if (url == null) {
+                break;
+            } else if (isSwapUrl(url)) {
+                // swap never works with a proxy, its unrouted IP on the same subnet
+                connection = (HttpURLConnection) url.openConnection();
+                // avoid keep-alive
+                connection.setRequestProperty("Connection", "Close");
+            } else if (queryString != null) {
                 connection = NetCipher.getHttpURLConnection(new URL(urlString + "?" + queryString));
             } else {
-                connection = NetCipher.getHttpURLConnection(sourceUrl);
+                connection = NetCipher.getHttpURLConnection(url);
             }
-        }
 
-        connection.setRequestProperty("User-Agent", Utils.getUserAgent());
-        connection.setConnectTimeout(getTimeout());
-        connection.setReadTimeout(getTimeout());
+            connection.setRequestProperty("User-Agent", Utils.getUserAgent());
+            connection.setConnectTimeout(getTimeout());
+            connection.setReadTimeout(getTimeout());
 
-        if (Build.VERSION.SDK_INT < 19) { // gzip encoding can be troublesome on old Androids
-            connection.setRequestProperty("Accept-Encoding", "identity");
-        }
+            // gzip encoding can be troublesome on old Androids
+            if (Build.VERSION.SDK_INT < 19) {
+                connection.setRequestProperty("Accept-Encoding", "identity");
+            }
 
-        if (username != null && password != null) {
             // add authorization header from username / password if set
-            String authString = username + ":" + password;
-            connection.setRequestProperty("Authorization", "Basic "
-                    + Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP));
-        }
+            if (username != null && password != null) {
+                String authString = username + ":" + password;
+                connection.setRequestProperty(
+                    "Authorization",
+                    "Basic " + Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP)
+                );
+            }
+        } while (
+          // Response Codes 300 - 399 are all redirects
+          connection.getResponseCode() >= 300 &&
+          connection.getResponseCode() < 400 &&
+          // Only follow at most 20 redirects (default taken from Firefox)
+          redirectCounter++ < 20
+        );
         return connection;
     }
 
