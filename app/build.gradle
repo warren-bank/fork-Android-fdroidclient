@@ -27,6 +27,7 @@ android {
     defaultConfig {
         versionCode Integer.parseInt(("1121" + "010000"), 10)  //Integer.MAX_VALUE == 2147483647
         versionName 'fork/1.12.1/v1.0.0'
+        archivesBaseName = 'fdroidclient-1.12.1-fork-v1.0.0'
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         minSdkVersion 14
