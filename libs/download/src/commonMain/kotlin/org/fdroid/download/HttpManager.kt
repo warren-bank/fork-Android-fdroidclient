@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.engine.ProxyConfig
+import io.ktor.client.plugins.HttpRedirect
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.UserAgent
@@ -73,7 +74,7 @@ public open class HttpManager @JvmOverloads constructor(
     private fun getNewHttpClient(proxyConfig: ProxyConfig? = null): HttpClient {
         currentProxy = proxyConfig
         return HttpClient(httpClientEngineFactory) {
-            followRedirects = false
+            followRedirects = true
             expectSuccess = true
             engine {
                 threadsCount = 4
@@ -82,6 +83,10 @@ public open class HttpManager @JvmOverloads constructor(
             }
             install(UserAgent) {
                 agent = userAgent
+            }
+            install(HttpRedirect) {
+                allowHttpsDowngrade = true
+                checkHttpMethod = false
             }
             install(HttpTimeout) {
                 if (highTimeouts || proxyConfig.isTor()) {
