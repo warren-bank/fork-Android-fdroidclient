@@ -23,13 +23,13 @@ def getVersionName = { ->
 def privilegedExtensionApplicationId = '"org.fdroid.fdroid.privileged"'
 
 android {
-    buildToolsVersion "33.0.2"
+    buildToolsVersion "33.0.1"
 
     compileSdkVersion 33
 
     defaultConfig {
-        versionCode 1018050
-        versionName getVersionName()
+        versionCode Integer.parseInt(("1180" + "010000"), 10)  //Integer.MAX_VALUE == 2147483647
+        versionName 'fork/1.18.0/v1.0.0'
         applicationId "org.fdroid"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
