@@ -136,6 +136,12 @@ public class HttpDownloader extends Downloader {
                 && FDroidApp.subnetInfo.isInRange(host); // on the same subnet as we are
     }
 
+    private static boolean isCustomTLSSocketFactory(URL url) {
+        return url.getProtocol().toLowerCase().startsWith("https")
+                && (Build.VERSION.SDK_INT >= 16)
+                && (Build.VERSION.SDK_INT <  20);
+    }
+
     private HttpURLConnection getConnection() throws SocketTimeoutException, IOException {
         HttpURLConnection connection = null;
         URL url = sourceUrl;
@@ -148,7 +154,7 @@ public class HttpDownloader extends Downloader {
 
             if (url == null) {
                 break;
-            } else if (isSwapUrl(url)) {
+            } else if (isSwapUrl(url) || isCustomTLSSocketFactory(url)) {
                 // swap never works with a proxy, its unrouted IP on the same subnet
                 connection = (HttpURLConnection) url.openConnection();
                 // avoid keep-alive
