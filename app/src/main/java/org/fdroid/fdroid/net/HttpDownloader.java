@@ -82,8 +82,7 @@ public class HttpDownloader extends Downloader {
     @Override
     public void download() throws ConnectException, IOException, InterruptedException {
         // get the file size from the server
-        HttpURLConnection tmpConn = getConnection();
-        tmpConn.setRequestMethod("HEAD");
+        HttpURLConnection tmpConn = getConnection("HEAD");
         String etag = tmpConn.getHeaderField(HEADER_FIELD_ETAG);
 
         int contentLength = -1;
@@ -143,6 +142,22 @@ public class HttpDownloader extends Downloader {
     }
 
     private HttpURLConnection getConnection() throws SocketTimeoutException, IOException {
+        String requestMethod = null;
+        boolean resumable = false;
+        return getConnection(requestMethod, resumable);
+    }
+
+    private HttpURLConnection getConnection(String requestMethod) throws SocketTimeoutException, IOException {
+        boolean resumable = false;
+        return getConnection(requestMethod, resumable);
+    }
+
+    private HttpURLConnection getConnection(boolean resumable) throws SocketTimeoutException, IOException {
+        String requestMethod = null;
+        return getConnection(requestMethod, resumable);
+    }
+
+    private HttpURLConnection getConnection(String requestMethod, boolean resumable) throws SocketTimeoutException, IOException {
         HttpURLConnection connection = null;
         URL url = sourceUrl;
         int redirectCounter = 0;
@@ -162,6 +177,12 @@ public class HttpDownloader extends Downloader {
             } else {
                 connection = NetCipher.getHttpURLConnection(url);
             }
+
+            if (requestMethod != null)
+                connection.setRequestMethod(requestMethod);
+
+            if (resumable)
+                connection.setRequestProperty("Range", "bytes=" + outputFile.length() + "-");
 
             connection.setRequestProperty("User-Agent", "F-Droid " + BuildConfig.VERSION_NAME);
             connection.setConnectTimeout(getTimeout());
@@ -191,14 +212,8 @@ public class HttpDownloader extends Downloader {
     }
 
     private void setupConnection(boolean resumable) throws IOException {
-        if (connection != null) {
-            return;
-        }
-        connection = getConnection();
-
-        if (resumable) {
-            // partial file exists, resume the download
-            connection.setRequestProperty("Range", "bytes=" + outputFile.length() + "-");
+        if (connection == null) {
+            connection = getConnection(resumable);
         }
     }
 
