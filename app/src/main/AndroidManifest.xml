@@ -3,11 +3,6 @@
           package="org.fdroid.fdroid"
           android:installLocation="auto">
 
-    <uses-sdk
-            android:minSdkVersion="10"
-            android:targetSdkVersion="24"
-    />
-
     <supports-screens
             android:anyDensity="true"
             android:largeScreens="true"

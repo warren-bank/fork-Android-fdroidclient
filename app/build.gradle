@@ -1,68 +1,50 @@
 apply plugin: 'com.android.application'
-apply plugin: 'witness'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 
-/* gets the version name from the latest Git tag, stripping the leading v off */
-def getVersionName = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'describe', '--tags', '--always'
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
-}
-
-repositories {
-    jcenter()
-    maven {
-        url "https://jitpack.io"
-    }
-}
-
 dependencies {
-    compile "com.android.support:support-v4:25.3.1"
-    compile "com.android.support:appcompat-v7:25.3.1"
-    compile "com.android.support:gridlayout-v7:25.3.1"
-    compile "com.android.support:support-annotations:25.3.1"
-    compile "com.android.support:recyclerview-v7:25.3.1"
-    compile "com.android.support:cardview-v7:25.3.1"
-    compile "com.android.support:design:25.3.1"
-    compile "com.android.support:support-vector-drawable:25.3.1"
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile "com.android.support:palette-v7:25.3.1"
+    implementation "com.android.support:support-v4:25.3.1"
+    implementation "com.android.support:appcompat-v7:25.3.1"
+    implementation "com.android.support:gridlayout-v7:25.3.1"
+    implementation "com.android.support:support-annotations:25.3.1"
+    implementation "com.android.support:recyclerview-v7:25.3.1"
+    implementation "com.android.support:cardview-v7:25.3.1"
+    implementation "com.android.support:design:25.3.1"
+    implementation "com.android.support:support-vector-drawable:25.3.1"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation "com.android.support:palette-v7:25.3.1"
 
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'com.google.zxing:core:3.3.2'
-    compile 'eu.chainfire:libsuperuser:1.0.0.201602271131'
-    compile 'cc.mvdan.accesspoint:library:0.2.0'
-    compile 'info.guardianproject.netcipher:netcipher:2.0.0-alpha1'
-    compile "info.guardianproject.panic:panic:0.5"
-    compile 'commons-io:commons-io:2.5'
-    compile 'commons-net:commons-net:3.5'
-    compile 'org.jmdns:jmdns:3.5.3'
-    compile 'ch.acra:acra:4.9.1'
-    compile 'io.reactivex:rxjava:1.1.0'
-    compile 'io.reactivex:rxandroid:0.23.0'
-    compile 'com.hannesdorfmann:adapterdelegates3:3.0.1'
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    implementation 'com.google.zxing:core:3.3.2'
+    implementation 'eu.chainfire:libsuperuser:1.0.0.201602271131'
+    implementation 'cc.mvdan.accesspoint:library:0.2.0'
+    implementation 'info.guardianproject.netcipher:netcipher:2.0.0-alpha1'
+    implementation "info.guardianproject.panic:panic:0.5"
+    implementation 'commons-io:commons-io:2.5'
+    implementation 'commons-net:commons-net:3.5'
+    implementation 'org.jmdns:jmdns:3.5.3'
+    implementation 'ch.acra:acra:4.9.1'
+    implementation 'io.reactivex:rxjava:1.1.0'
+    implementation 'io.reactivex:rxandroid:0.23.0'
+    implementation 'com.hannesdorfmann:adapterdelegates3:3.0.1'
 
     // Migrate this to upstream https://github.com/Ashok-Varma/BottomNavigation if PR #110 gets
     // accepted to drop the minSdk to 10.
-    compile('com.github.pserwylo:BottomNavigation:1.5.0')
+    implementation('com.github.pserwylo:BottomNavigation:1.5.0')
 
-    compile 'com.fasterxml.jackson.core:jackson-core:2.8.7'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.7'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.7'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.8.7'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.8.7'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.7'
 
-    testCompile "org.robolectric:robolectric:3.3.2"
-    testCompile 'junit:junit:4.12'
+    testImplementation "org.robolectric:robolectric:3.3.2"
+    testImplementation 'junit:junit:4.12'
     // As per https://github.com/robolectric/robolectric/issues/1932#issuecomment-219796474
-    testCompile 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
-    testCompile "org.mockito:mockito-core:1.10.19"
+    testImplementation 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
+    testImplementation "org.mockito:mockito-core:1.10.19"
 
-    androidTestCompile "com.android.support:support-annotations:25.3.1"
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestImplementation "com.android.support:support-annotations:25.3.1"
+    androidTestImplementation 'com.android.support.test:runner:0.5'
+    androidTestImplementation 'com.android.support.test:rules:0.5'
 }
 
 if (!hasProperty('sourceDeps')) {
@@ -76,70 +58,22 @@ if (!hasProperty('sourceDeps')) {
     }
 
     dependencies {
-        compile 'com.madgag.spongycastle:pkix:1.54.0.0'
-        compile 'com.madgag.spongycastle:prov:1.54.0.0'
-        compile 'com.madgag.spongycastle:core:1.54.0.0'
+        implementation 'com.madgag.spongycastle:pkix:1.54.0.0'
+        implementation 'com.madgag.spongycastle:prov:1.54.0.0'
+        implementation 'com.madgag.spongycastle:core:1.54.0.0'
 
         // Upstream doesn't have a binary on mavenCentral/jcenter yet:
         // https://github.com/kolavar/android-support-v4-preferencefragment/issues/13
-        compile(name: 'support-v4-preferencefragment-release', ext: 'aar')
+        implementation(name: 'support-v4-preferencefragment-release', ext: 'aar')
 
         // Fork for F-Droid, including support for https. Not merged into upstream
         // yet (seems to be a little unsupported as of late), so not using mavenCentral/jcenter.
-        compile(name: 'nanohttpd-2.1.0')
+        implementation(name: 'nanohttpd-2.1.0')
 
         // Upstream doesn't have a binary on mavenCentral, and it is an SVN repo on
         // Google Code.  We include this code directly in this repo, and have made
         // modifications that should be pushed to anyone who wants to maintain it.
-        compile(name: 'zipsigner')
-    }
-
-    // Only do the libraries imported from maven repositories. Our own libraries
-    // (like privileged-api-lib) and the prebuilt jars already checked into the
-    // source code don't need to be here.
-    // generate using: `gradle -q calculateChecksums | sort -V`
-    dependencyVerification {
-        verify = [
-                'cc.mvdan.accesspoint:library:0837b38adb48b66bb1385adb6ade8ecce7002ad815c55abf13517c82193458ea',
-                'ch.acra:acra:d2762968c448757a7d6acc9f141881d9632f664988e9723ece33b5f7c79f3bc9',
-                'commons-io:commons-io:a10418348d234968600ccb1d988efcbbd08716e1d96936ccc1880e7d22513474',
-                'commons-net:commons-net:c25b0da668b3c5649f002d504def22d1b4cb30d206f05428d2fe168fa1a901c2',
-                'com.android.support.constraint:constraint-layout-solver:8c62525a9bc5cff5633a96cb9b32fffeccaf41b8841aa87fc22607070dea9b8d',
-                'com.android.support.constraint:constraint-layout:b0c688cc2b7172608f8153a689d746da40f71e52d7e2fe2bfd9df2f92db77085',
-                'com.android.support:animated-vector-drawable:4bc46edf1946b32d518b41416d1734e915e0cbb28021de3b340527419b070691',
-                'com.android.support:appcompat-v7:ac1ebbc46589195dda3e0b1becfe410bafd75bdf3edd1cd9acf04850f3895830',
-                'com.android.support:cardview-v7:defc17032ffa600a82e1c7d96bb574aa5ed64e2b57e28414a245da7d6db0c666',
-                'com.android.support:design:a3e83064fe99d0a4369f9b46d8bfbe77d0c3022fffdee4be3ac3857b87cc89e3',
-                'com.android.support:gridlayout-v7:de87a59472f19eb05429faf6b2683a09dd6995f5db562d3daf6033297c312388',
-                'com.android.support:palette-v7:956276da2ed8b6c087c431da807a496f4908061c9c64d4c9f7b42c626d633662',
-                'com.android.support:recyclerview-v7:375974a8724e359d97d77fa8522c614f813a3ac4583c1807f154a3f9a054b0a1',
-                'com.android.support:support-annotations:aedf76962584adfaed2bd3fcaa22406461c4310237fc27e301128edaa2dba2fa',
-                'com.android.support:support-compat:e02d781268dc60aab6638d8dc20156ea11ca20b962d294b85e6f1e8418cabfa7',
-                'com.android.support:support-core-ui:6182278a6653e6c111c888963626cbb16f2d0022571cb239760475119e0b92a8',
-                'com.android.support:support-core-utils:32fac02eb2c20a77fa3e3bc3ede62392a19613f72b8f8e10f5dfa84bb4c89ea1',
-                'com.android.support:support-fragment:541d6393c1e024453aca2a14f31bea0c7270ff4e2a02783f3528aa426367444d',
-                'com.android.support:support-media-compat:cbed07d07e0e84fdb4b75712f5fd946229a8af155933c9a92e41db64d00791e0',
-                'com.android.support:support-v4:07d389154bcf73b47e514964df1578136b26cba78257b8a577a3ccb54beff0ae',
-                'com.android.support:support-vector-drawable:13728f337f36d1c02d52198a6c20724edb447a0875454d829f95cb9eb4aa293b',
-                'com.android.support:transition:36c688825a8c0e6e879e18886de83dc90673322822d5b606ee302f70fb558e16',
-                'com.fasterxml.jackson.core:jackson-annotations:6b7802f6c22c09c4a92a2ebeb76e755c3c0a58dfbf419835fae470d89e469b86',
-                'com.fasterxml.jackson.core:jackson-core:256ff34118ab292d1b4f3ee4d2c3e5e5f0f609d8e07c57e8ad1f51c46d4fbb46',
-                'com.fasterxml.jackson.core:jackson-databind:4f74337b6d18664be0f5b15c6664b17aa3972c9c175092328b139b894ff66f19',
-                'com.github.pserwylo:BottomNavigation:83d7941a7a8d21ba1a8a708cd683b1bb07c6cf898044dc92eadf18a7a7d54f90',
-                'com.google.zxing:core:52dd6211bbaf4e600de693834d597e49707f3e6606e1f5d3740fbb8274466abe',
-                'com.hannesdorfmann:adapterdelegates3:1b20d099d6e7afe57aceca13b713b386959d94a247c3c06a7aeb65b866ece02f',
-                'com.madgag.spongycastle:core:1e7fa4b19ccccd1011364ab838d0b4702470c178bbbdd94c5c90b2d4d749ea1e',
-                'com.madgag.spongycastle:pkix:721a302f5ce18bf6fff89d514ef224c37b5dd9ca67a16b56fafaea4b24a51482',
-                'com.madgag.spongycastle:prov:cf89c550fda86c0f26858c3d851ac1d2ce49cd78dd144cd86f307b7ea3e6afd7',
-                'com.nostra13.universalimageloader:universal-image-loader:dbd5197ffec3a8317533190870a7c00ff3750dd6a31241448c6a5522d51b65b4',
-                'eu.chainfire:libsuperuser:018344ff19ee94d252c14b4a503ee8b519184db473a5af83513f5837c413b128',
-                'info.guardianproject.netcipher:netcipher:eeeb5d0d95ccfe176b4296cbd71a9a24c6efb0bab5c4025a8c6bc36abdddfc75',
-                'info.guardianproject.panic:panic:a7ed9439826db2e9901649892cf9afbe76f00991b768d8f4c26332d7c9406cb2',
-                'io.reactivex:rxandroid:35c1a90f8c1f499db3c1f3d608e1f191ac8afddb10c02dd91ef04c03a0a4bcda',
-                'io.reactivex:rxjava:2c162afd78eba217cdfee78b60e85d3bfb667db61e12bc95e3cf2ddc5beeadf6',
-                'org.jmdns:jmdns:24e7e3a50a579136400e8c9b0750399eb3c7558918bdf52c0ffa5e0fa5aad503',
-                'org.slf4j:slf4j-api:e56288031f5e60652c06e7bb6e9fa410a61231ab54890f7b708fc6adc4107c5b',
-        ]
+        implementation(name: 'zipsigner')
     }
 
 } else {
@@ -147,11 +81,11 @@ if (!hasProperty('sourceDeps')) {
     logger.info "Setting up *source* dependencies for F-Droid (because you passed in the -PsourceDeps argument to gradle while building)."
 
     dependencies {
-        compile(project(':extern:support-v4-preferencefragment')) {
+        implementation(project(':extern:support-v4-preferencefragment')) {
             exclude module: 'support-v4'
         }
-        compile project(':extern:nanohttpd:core')
-        compile project(':extern:zipsigner')
+        implementation project(':extern:nanohttpd:core')
+        implementation project(':extern:zipsigner')
     }
 
     task binaryDeps(type: Copy, dependsOn: ':app:prepareReleaseDependencies') {
@@ -176,19 +110,15 @@ if (!hasProperty('sourceDeps')) {
     }
 }
 
-def isCi = "true".equals(System.getenv("CI"))
-def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
-
 android {
-    compileSdkVersion 24
-    buildToolsVersion '25.0.3'
+    compileSdkVersion 33
+    buildToolsVersion '33.0.1'
 
     buildTypes {
         // use proguard on debug too since we have unknowingly broken
         // release builds before.
         all {
             minifyEnabled true
-            useProguard true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'src/androidTest/proguard-rules.pro'
@@ -207,16 +137,11 @@ android {
         cruncherEnabled = false
     }
 
-    dexOptions {
-        // Improve build server performance by allowing disabling of pre-dexing
-        // see http://tools.android.com/tech-docs/new-build-system/tips#TOC-Improving-Build-Server-performance
-        // Skip pre-dexing when running on CI or when disabled via -Dpre-dex=false.
-        preDexLibraries = preDexEnabled && !isCi
-    }
-
     defaultConfig {
-        versionCode 1002052
-        versionName getVersionName()
+        versionCode Integer.parseInt(("1022" + "010000"), 10)  //Integer.MAX_VALUE == 2147483647
+        versionName 'fork/1.2.2/v1.0.0'
+        minSdkVersion 10
+        targetSdkVersion 24
         applicationId 'org.fdroid.fdroid'
         resValue "string", "applicationId", applicationId
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -227,32 +152,6 @@ android {
             applicationIdSuffix ".debug"
             resValue "string", "applicationId", defaultConfig.applicationId + applicationIdSuffix
             versionNameSuffix "-debug"
-        }
-    }
-
-    /* set the debug versionCode based on DB verson and how many commits in the repo */
-    applicationVariants.all { variant ->
-        if (variant.buildType.isDebuggable()) {
-            // default to a timestamp, in case anything fails later
-            variant.mergedFlavor.versionCode = new Date().getTime() / 1000
-            try {
-                def stdout = new ByteArrayOutputStream()
-                exec {
-                    commandLine 'git', 'rev-list', '--first-parent', '--count', 'HEAD'
-                    standardOutput = stdout
-                }
-                def commitCount = Integer.parseInt(stdout.toString().trim())
-                stdout = new ByteArrayOutputStream()
-                exec {
-                    commandLine 'sed', '-n', 's,.*DB_VERSION *= *\\([0-9][0-9]*\\).*,\\1,p', 'src/main/java/org/fdroid/fdroid/data/DBHelper.java'
-                    standardOutput = stdout
-                }
-                def dbVersion = Integer.parseInt(stdout.toString().trim())
-                println 'Setting debug versionCode: ' + sprintf("%d%05d", [dbVersion, commitCount])
-                variant.mergedFlavor.versionCode = Integer.parseInt(sprintf("%d%05d", [dbVersion, commitCount]))
-            }
-            catch (ignored) {
-            }
         }
     }
 
@@ -314,7 +213,7 @@ task checkstyle(type: Checkstyle) {
 }
 
 pmd {
-    toolVersion = '5.5.1'
+    toolVersion = '6.20.0'
     consoleOutput = true
 }
 
@@ -335,35 +234,3 @@ task pmdTest(type: Pmd) {
 }
 
 task pmd(dependsOn: [pmdMain, pmdTest]) {}
-
-// This person took the example code below from another blogpost online, however
-// I lost the reference to it:
-// http://stackoverflow.com/questions/23297562/gradle-javadoc-and-android-documentation
-android.applicationVariants.all { variant ->
-
-    task("generate${variant.name}Javadoc", type: Javadoc) {
-        title = "$name $version API"
-        description "Generates Javadoc for F-Droid."
-        source = variant.javaCompile.source
-
-        def sdkDir
-        Properties properties = new Properties()
-        File localProps = project.rootProject.file('local.properties')
-        if (localProps.exists()) {
-            properties.load(localProps.newDataInputStream())
-            sdkDir = properties.getProperty('sdk.dir')
-        } else {
-            sdkDir = System.getenv('ANDROID_HOME')
-        }
-        if (!sdkDir) {
-            throw new ProjectConfigurationException("Cannot find android sdk. Make sure sdk.dir is defined in local.properties or the environment variable ANDROID_HOME is set.", null)
-        }
-
-        ext.androidJar = "${sdkDir}/platforms/${android.compileSdkVersion}/android.jar"
-        classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
-        options.links("http://docs.oracle.com/javase/7/docs/api/");
-        options.links("http://d.android.com/reference/");
-        exclude '**/BuildConfig.java'
-        exclude '**/R.java'
-    }
-}
