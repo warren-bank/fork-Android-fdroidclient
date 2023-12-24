@@ -137,22 +137,50 @@ public class HttpDownloader extends Downloader {
     }
 
     private HttpURLConnection getConnection() throws SocketTimeoutException, IOException {
-        HttpURLConnection connection;
-        if (isSwapUrl(sourceUrl)) {
-            // swap never works with a proxy, its unrouted IP on the same subnet
-            connection = (HttpURLConnection) sourceUrl.openConnection();
-        } else {
-            connection = NetCipher.getHttpURLConnection(sourceUrl);
-        }
+        HttpURLConnection connection = null;
+        URL url = sourceUrl;
+        int redirectCounter = 0;
+        do {
+            if (connection != null) {
+                // throws MalformedURLException, a type of IOException
+                url = new URL(connection.getHeaderField("Location"));
+            }
 
-        connection.setRequestProperty("User-Agent", "F-Droid " + BuildConfig.VERSION_NAME);
-        connection.setConnectTimeout(getTimeout());
+            if (url == null) {
+                break;
+            } else if (isSwapUrl(url)) {
+                // swap never works with a proxy, its unrouted IP on the same subnet
+                connection = (HttpURLConnection) url.openConnection();
+                // avoid keep-alive
+                connection.setRequestProperty("Connection", "Close");
+            } else {
+                connection = NetCipher.getHttpURLConnection(url);
+            }
 
-        if (username != null && password != null) {
+            connection.setRequestProperty("User-Agent", "F-Droid " + BuildConfig.VERSION_NAME);
+            connection.setConnectTimeout(getTimeout());
+            connection.setReadTimeout(getTimeout());
+
+            // gzip encoding can be troublesome on old Androids
+            if (Build.VERSION.SDK_INT < 19) {
+                connection.setRequestProperty("Accept-Encoding", "identity");
+            }
+
             // add authorization header from username / password if set
-            String authString = username + ":" + password;
-            connection.setRequestProperty("Authorization", "Basic " + Base64.toBase64String(authString.getBytes()));
-        }
+            if (username != null && password != null) {
+                String authString = username + ":" + password;
+                connection.setRequestProperty(
+                    "Authorization",
+                    "Basic " + Base64.toBase64String(authString.getBytes())
+                );
+            }
+        } while (
+          // Response Codes 300 - 399 are all redirects
+          connection.getResponseCode() >= 300 &&
+          connection.getResponseCode() < 400 &&
+          // Only follow at most 20 redirects (default taken from Firefox)
+          redirectCounter++ < 20
+        );
         return connection;
     }
 
