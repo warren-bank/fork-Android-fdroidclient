@@ -129,8 +129,7 @@ public class HttpDownloader extends Downloader {
     @Override
     public void download() throws IOException, InterruptedException {
         // get the file size from the server
-        HttpURLConnection tmpConn = getConnection();
-        tmpConn.setRequestMethod("HEAD");
+        HttpURLConnection tmpConn = getConnection("HEAD");
 
         int contentLength = -1;
         int statusCode = tmpConn.getResponseCode();
@@ -201,6 +200,22 @@ public class HttpDownloader extends Downloader {
     }
 
     HttpURLConnection getConnection() throws SocketTimeoutException, IOException {
+        String requestMethod = null;
+        boolean resumable = false;
+        return getConnection(requestMethod, resumable);
+    }
+
+    HttpURLConnection getConnection(String requestMethod) throws SocketTimeoutException, IOException {
+        boolean resumable = false;
+        return getConnection(requestMethod, resumable);
+    }
+
+    HttpURLConnection getConnection(boolean resumable) throws SocketTimeoutException, IOException {
+        String requestMethod = null;
+        return getConnection(requestMethod, resumable);
+    }
+
+    HttpURLConnection getConnection(String requestMethod, boolean resumable) throws SocketTimeoutException, IOException {
         HttpURLConnection connection = null;
         URL url = sourceUrl;
         int redirectCounter = 0;
@@ -223,6 +238,12 @@ public class HttpDownloader extends Downloader {
                 connection = NetCipher.getHttpURLConnection(url);
             }
 
+            if (requestMethod != null)
+                connection.setRequestMethod(requestMethod);
+
+            if (resumable)
+                connection.setRequestProperty("Range", "bytes=" + outputFile.length() + "-");
+
             connection.setRequestProperty("User-Agent", Utils.getUserAgent());
             connection.setConnectTimeout(getTimeout());
             connection.setReadTimeout(getTimeout());
@@ -241,24 +262,25 @@ public class HttpDownloader extends Downloader {
                 );
             }
         } while (
+          // when POST, short-circuit to prevent establishing a connection
+          (
+            (requestMethod == null) ||
+            !requestMethod.toUpperCase().equals("POST")
+          ) &&
+
           // Response Codes 300 - 399 are all redirects
-          connection.getResponseCode() >= 300 &&
-          connection.getResponseCode() < 400 &&
+          (connection.getResponseCode() >= 300) &&
+          (connection.getResponseCode() <  400) &&
+
           // Only follow at most 20 redirects (default taken from Firefox)
-          redirectCounter++ < 20
+          (redirectCounter++ < 20)
         );
         return connection;
     }
 
     private void setupConnection(boolean resumable) throws IOException {
-        if (connection != null) {
-            return;
-        }
-        connection = getConnection();
-
-        if (resumable) {
-            // partial file exists, resume the download
-            connection.setRequestProperty("Range", "bytes=" + outputFile.length() + "-");
+        if (connection == null) {
+            connection = getConnection(resumable);
         }
     }
 

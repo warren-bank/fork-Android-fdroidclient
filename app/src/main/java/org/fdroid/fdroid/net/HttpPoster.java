@@ -28,8 +28,7 @@ public class HttpPoster extends HttpDownloader {
      * @return The HTTP Status Code
      */
     public void post(String json) throws IOException {
-        HttpURLConnection connection = getConnection();
-        connection.setRequestMethod("POST");
+        HttpURLConnection connection = getConnection("POST");
         connection.setRequestProperty("Content-Type", "application/json; utf-8");
         connection.setDoOutput(true);
         OutputStream os = connection.getOutputStream();
