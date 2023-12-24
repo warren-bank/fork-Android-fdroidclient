@@ -140,6 +140,7 @@ android {
     defaultConfig {
         versionCode Integer.parseInt(("1022" + "010000"), 10)  //Integer.MAX_VALUE == 2147483647
         versionName 'fork/1.2.2/v1.0.0'
+        archivesBaseName = 'fdroidclient-1.02.2-fork-v1.0.0'
         minSdkVersion 10
         targetSdkVersion 24
         applicationId 'org.fdroid.fdroid'
