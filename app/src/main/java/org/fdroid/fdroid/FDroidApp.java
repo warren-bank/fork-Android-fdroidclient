@@ -68,9 +68,11 @@ import org.fdroid.fdroid.installer.InstallHistoryService;
 import org.fdroid.fdroid.net.ConnectivityMonitorService;
 import org.fdroid.fdroid.net.ImageLoaderForUIL;
 import org.fdroid.fdroid.net.WifiStateChangeService;
+import org.fdroid.fdroid.net.extras.TLSSocketFactory;
 import org.fdroid.fdroid.views.hiding.HidingManager;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.security.Security;
 import java.util.List;
@@ -328,6 +330,19 @@ public class FDroidApp extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+
+        if (
+            (Build.VERSION.SDK_INT >= 16) &&
+            (Build.VERSION.SDK_INT <  20)
+        ) {
+            try {
+                TLSSocketFactory socketFactory = new TLSSocketFactory();
+
+                HttpsURLConnection.setDefaultSSLSocketFactory(socketFactory);
+            }
+            catch(Exception e) {}
+        }
+
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                     .detectAll()
